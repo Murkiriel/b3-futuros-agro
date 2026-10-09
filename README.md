@@ -35,7 +35,8 @@ Formato do CSV: UTF-8, separador vírgula, ponto decimal, datas `AAAA-MM-DD`.
 Cole [`powerbi/FuturosAgro_GitHub.pq`](powerbi/FuturosAgro_GitHub.pq) em
 **Transformar dados → Nova Fonte → Consulta Nula → Editor Avançado**. A credencial é
 **Anônimo** e a privacidade, **Público**. Para a atualização agendada no Power BI
-Service não é preciso gateway.
+Service não é preciso gateway. Para ler a planilha do release mais recente em vez do
+CSV, use [`powerbi/FuturosAgro_GitHub_xlsx.pq`](powerbi/FuturosAgro_GitHub_xlsx.pq).
 
 Em [`powerbi/direto_da_b3/`](powerbi/direto_da_b3/) há uma alternativa em que o próprio
 Power BI baixa o boletim simplificado da B3, sem depender deste repositório. Ela traz
