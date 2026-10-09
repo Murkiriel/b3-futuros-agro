@@ -1,0 +1,74 @@
+{
+  "2026-10-01": {
+    "arquivo_xml": "BVBG.086.01_BV000328202610010328000002039013110.xml",
+    "baixado_em": "2026-10-09T14:12:44",
+    "contratos": [
+      "BGI",
+      "CCM",
+      "SJC"
+    ],
+    "dolar_b3": 5.2215,
+    "final": true,
+    "versao_b3": "2026-10-01T20:38:50"
+  },
+  "2026-10-02": {
+    "arquivo_xml": "BVBG.086.01_BV000328202610020328000002043571980.xml",
+    "baixado_em": "2026-10-09T14:12:49",
+    "contratos": [
+      "BGI",
+      "CCM",
+      "SJC"
+    ],
+    "dolar_b3": 5.2221,
+    "final": true,
+    "versao_b3": "2026-10-02T20:43:47"
+  },
+  "2026-10-05": {
+    "arquivo_xml": "BVBG.086.01_BV000328202610050328000002047038877.xml",
+    "baixado_em": "2026-10-09T14:12:55",
+    "contratos": [
+      "BGI",
+      "CCM",
+      "SJC"
+    ],
+    "dolar_b3": 4.9969,
+    "final": true,
+    "versao_b3": "2026-10-05T20:46:51"
+  },
+  "2026-10-06": {
+    "arquivo_xml": "BVBG.086.01_BV000328202610060328000002039202395.xml",
+    "baixado_em": "2026-10-09T14:14:05",
+    "contratos": [
+      "BGI",
+      "CCM",
+      "SJC"
+    ],
+    "dolar_b3": 4.9766,
+    "final": true,
+    "versao_b3": "2026-10-06T20:39:08"
+  },
+  "2026-10-07": {
+    "arquivo_xml": "BVBG.086.01_BV000328202610070328000002038100712.xml",
+    "baixado_em": "2026-10-09T14:13:10",
+    "contratos": [
+      "BGI",
+      "CCM",
+      "SJC"
+    ],
+    "dolar_b3": 5.003,
+    "final": true,
+    "versao_b3": "2026-10-07T20:37:59"
+  },
+  "2026-10-08": {
+    "arquivo_xml": "BVBG.086.01_BV000328202610080328000002035178831.xml",
+    "baixado_em": "2026-10-09T14:13:21",
+    "contratos": [
+      "BGI",
+      "CCM",
+      "SJC"
+    ],
+    "dolar_b3": 5.0096,
+    "final": true,
+    "versao_b3": "2026-10-08T20:35:07"
+  }
+}

@@ -1,0 +1,6 @@
+# Arquivos brutos e planilhas geradas localmente (grandes ou com metadados pessoais)
+*.xml
+*.xlsx
+*.zip
+*.tmp
+__pycache__/

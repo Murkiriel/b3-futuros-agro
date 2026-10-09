@@ -1,0 +1,64 @@
+name: Atualizar dados
+
+on:
+  schedule:
+    # 21:30 de Brasília, de segunda a sexta (00:30 UTC de terça a sábado): pega o pregão
+    # do dia, normalmente publicado pela B3 até ~20h40.
+    - cron: "30 0 * * 2-6"
+    # 08:00 de Brasília, de terça a sábado: confirma a versão final do pregão anterior.
+    - cron: "0 11 * * 2-6"
+  workflow_dispatch:
+    inputs:
+      argumentos:
+        description: "Argumentos extras do script (ex.: --inicio 2026-10-01 --refazer)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: atualizar-dados
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Baixar pregões da B3
+        id: coleta
+        env:
+          ARGUMENTOS: ${{ github.event.inputs.argumentos }}
+        run: |
+          # Dias com erro não impedem a gravação dos demais; a falha é sinalizada no fim.
+          python b3_futuros_agro.py --sem-excel $ARGUMENTOS || echo "falhou=1" >> "$GITHUB_OUTPUT"
+
+      - name: Gravar dados no repositório
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dados
+          if git diff --cached --quiet; then
+            echo "Nada novo para gravar."
+          else
+            git commit -m "Dados: atualização $(TZ=America/Sao_Paulo date +%F\ %H:%M)"
+            git pull --rebase --autostash
+            git push
+          fi
+
+      - name: Sinalizar dias com erro
+        if: steps.coleta.outputs.falhou == '1'
+        run: |
+          echo "::error::Algum pregão não pôde ser baixado; veja o log da etapa 'Baixar pregões da B3'. Ele será tentado de novo na próxima execução."
+          exit 1
