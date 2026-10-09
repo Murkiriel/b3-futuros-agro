@@ -42,9 +42,10 @@ jobs:
           ARGUMENTOS: ${{ github.event.inputs.argumentos }}
         run: |
           # Dias com erro não impedem a gravação dos demais; a falha é sinalizada no fim.
-          python b3_futuros_agro.py --sem-excel $ARGUMENTOS || echo "falhou=1" >> "$GITHUB_OUTPUT"
+          python b3_futuros_agro.py $ARGUMENTOS || echo "falhou=1" >> "$GITHUB_OUTPUT"
 
       - name: Gravar dados no repositório
+        id: gravar
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -55,6 +56,32 @@ jobs:
             git commit -m "Dados: atualização $(TZ=America/Sao_Paulo date +%F\ %H:%M)"
             git pull --rebase --autostash
             git push
+            echo "mudou=1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publicar release do último pregão
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MUDOU: ${{ steps.gravar.outputs.mudou }}
+        run: |
+          python notas_release.py notas.md > release.txt
+          tag="$(sed -n 's/^tag=//p' release.txt)"
+          titulo="$(sed -n 's/^titulo=//p' release.txt)"
+          arquivos="b3_futuros_agro.xlsx dados/b3_futuros_agro.csv"
+          if gh release view "$tag" > /dev/null 2>&1; then
+            # O release do pregão já existe (ex.: criado às 21h30 com a versão provisória):
+            # só troca os arquivos e as notas quando os dados mudaram.
+            if [ "$MUDOU" = "1" ]; then
+              gh release upload "$tag" $arquivos --clobber
+              gh release edit "$tag" --title "$titulo" --notes-file notas.md
+              echo "Release $tag atualizado."
+            else
+              echo "Release $tag já está em dia."
+            fi
+          else
+            gh release create "$tag" $arquivos --title "$titulo" --notes-file notas.md \
+              --target "$(git rev-parse HEAD)" --latest
+            echo "Release $tag criado."
           fi
 
       - name: Sinalizar dias com erro

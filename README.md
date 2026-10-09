@@ -4,8 +4,14 @@ Dados diários dos contratos futuros de **boi gordo (BGI)**, **milho (CCM)** e *
 cross (SJC)** da B3, extraídos do Boletim de Preços oficial e atualizados todo dia útil
 por GitHub Actions.
 
-**Arquivo de dados (CSV, atualizado todo dia útil):**
-[`dados/b3_futuros_agro.csv`](dados/b3_futuros_agro.csv)
+**Baixar:** cada pregão vira um [release](../../releases) com a planilha formatada e o
+CSV do histórico completo. Links fixos para o pregão mais recente:
+
+- Planilha: [`b3_futuros_agro.xlsx`](../../releases/latest/download/b3_futuros_agro.xlsx)
+- CSV: [`b3_futuros_agro.csv`](../../releases/latest/download/b3_futuros_agro.csv)
+
+O CSV também fica no repositório, em [`dados/b3_futuros_agro.csv`](dados/b3_futuros_agro.csv).
+É esse endereço que o Power BI usa:
 
 ```
 https://raw.githubusercontent.com/Murkiriel/b3-futuros-agro/main/dados/b3_futuros_agro.csv
@@ -45,6 +51,8 @@ menos colunas; veja o `COMO_USAR_POWER_BI.md` de lá.
   dia. A B3 republica o boletim algumas vezes durante a noite.
 - Cada pregão fica em `dados/diario/AAAA-MM-DD.csv`. O CSV consolidado é refeito a partir
   deles. `dados/controle.json` registra a versão usada em cada dia.
+- Quando entra um pregão novo, a automação publica o release `pregao-AAAA-MM-DD`. Na
+  rodada da manhã seguinte, os arquivos dele são atualizados para a versão final.
 - Sobre a fonte:
   - A B3 às vezes devolve o arquivo vazio, ou corrompido, mesmo em dia de pregão. O
     script tenta de novo antes de concluir que não houve pregão.

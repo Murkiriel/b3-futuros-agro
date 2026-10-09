@@ -478,7 +478,9 @@ def gerar_excel(linhas: list[dict]) -> Path:
         ('Contratos', ', '.join(f'{c} ({DESCRICAO.get(c, ("?",))[0]})' for c in contratos)),
         ('Período', f'{datas[0]} a {datas[-1]} ({len(datas)} pregões)' if datas else 'sem dados'),
         ('Atualizado em', f'{agora():%d/%m/%Y %H:%M} (horário de Brasília)'),
-        ('Como atualizar', 'Rode rodar.bat (ou python b3_futuros_agro.py) após ~21h ou no dia seguinte'),
+        ('Como atualizar', 'Atualizada todo dia útil pelo GitHub Actions em '
+                           'github.com/Murkiriel/b3-futuros-agro (veja Releases). '
+                           'Localmente: python b3_futuros_agro.py após ~21h'),
         ('R$ e US$', 'A B3 cota BGI e CCM em reais e SJC em dólares. A outra moeda é calculada '
                      'com o Dólar B3 do dia (a taxa que a própria B3 usou no boletim)'),
         ('Versão B3', 'A B3 republica o boletim várias vezes no dia; usa-se sempre a versão mais recente'),
