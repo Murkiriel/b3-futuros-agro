@@ -242,11 +242,27 @@ def baixar(url: str, timeout: int = 180) -> bytes:
     raise RuntimeError('inalcançável')
 
 
+def _zip_integro(zf: zipfile.ZipFile) -> bool:
+    """Confere o ZIP e cada ZIP aninhado: a B3 já entregou o externo íntegro com o
+    interno inválido."""
+    if zf.testzip() is not None:
+        return False
+    for nome in zf.namelist():
+        if nome.lower().endswith('.zip'):
+            try:
+                with zipfile.ZipFile(io.BytesIO(zf.read(nome))) as interno:
+                    if not _zip_integro(interno):
+                        return False
+            except zipfile.BadZipFile:
+                return False
+    return True
+
+
 def baixar_boletim(dia: dt.date) -> bytes:
     # A B3 devolve, ao acaso, cerca de 1 em cada 4 pedidos com o ZIP vazio mesmo em
-    # dia com pregão, e às vezes entrega o ZIP corrompido com HTTP 200. Nos dois
-    # casos baixa de novo; só depois de todas as tentativas vazias o dia é tratado
-    # como sem boletim (feriado ou ainda não publicado).
+    # dia com pregão, e às vezes entrega o ZIP (ou o ZIP aninhado) corrompido com
+    # HTTP 200. Nos dois casos baixa de novo; só depois de todas as tentativas vazias
+    # o dia é tratado como sem boletim (feriado ou ainda não publicado).
     for tentativa in range(1, TENTATIVAS_VAZIO + 1):
         try:
             conteudo = baixar(URL_PR.format(dia))
@@ -261,7 +277,7 @@ def baixar_boletim(dia: dt.date) -> bytes:
         else:
             try:
                 with zipfile.ZipFile(io.BytesIO(conteudo)) as zf:
-                    if zf.testzip() is None:
+                    if _zip_integro(zf):
                         return conteudo
                 erro = 'ZIP com arquivo corrompido'
             except zipfile.BadZipFile:
